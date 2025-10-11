@@ -59,6 +59,34 @@
 
     .pill{display:inline-block;padding:2px 8px;font-size:12px;border-radius:999px;border:1px solid rgba(201,162,39,.35);color:var(--gold-soft);background:rgba(201,162,39,.06)}
 
+    /* 參數面板 - 摺疊樣式 */
+    .collapsible-header {
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 10px 0;
+        padding: 0 0 5px 0;
+        border-bottom: 1px dashed var(--line); /* 區隔線 */
+    }
+    .collapsible-header:hover {
+        filter: brightness(1.1);
+    }
+    .collapsible-content {
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+    }
+    .arrow {
+        display: inline-block;
+        transition: transform 0.3s;
+        font-size: 16px;
+        color: var(--gold-soft);
+        margin-right: 5px;
+    }
+    .collapsed .arrow {
+        transform: rotate(-90deg);
+    }
+
     /* 結果表 */
     table{width:100%;border-collapse:collapse;border-spacing:0;border:1px solid rgba(201,162,39,.30);background:linear-gradient(180deg,rgba(233,209,138,.05),rgba(233,209,138,.02));border-radius:12px;overflow:hidden}
     th,td{
@@ -72,7 +100,7 @@
     /* 摘要表格特殊樣式 */
     #summaryTable1, #summaryTable2 {
         table-layout: fixed; /* 讓欄寬均等 */
-        margin-bottom: 0px; /* 移除表格間距 */
+        margin-bottom: 0px; 
         border: none;
     }
     #summaryTable1 th, #summaryTable1 td, 
@@ -118,6 +146,39 @@
         background-color: var(--bad); /* Red for liquidated */
     }
 
+    /* AI 建議卡片樣式 */
+    #aiSuggestionCard {
+        padding: 12px;
+        border: 1px solid rgba(201,162,39,.4);
+        border-radius: 10px;
+        background: rgba(201,162,39,0.05);
+    }
+    #aiSuggestionCard h4 {
+        margin-top: 0;
+        margin-bottom: 8px;
+        font-size: 14px;
+        color: var(--gold-soft);
+        display: flex;
+        align-items: center;
+    }
+    #aiSuggestionCard .advice-type {
+        font-weight: bold;
+        margin-right: 8px;
+        color: var(--ok);
+    }
+    #aiSuggestionCard .advice-type.bad {
+        color: var(--bad);
+    }
+    #aiSuggestionCard .advice-type.warn {
+        color: var(--warn);
+    }
+    #aiSuggestionCard ul {
+        list-style: disc;
+        padding-left: 20px;
+        margin: 6px 0 0;
+        font-size: 13px;
+        color: var(--muted);
+    }
     /* 通用表格樣式 */
     th{
       text-align:left;color:var(--gold-soft);
@@ -267,43 +328,53 @@
 
     <div class="hr"></div>
 
-    <h4 class="section-title">風控</h4>
-    <div class="row">
-      <div>
-        <label>安全邊際（%）</label>
-        <input id="safetyFloor" type="number" min="1" max="50" step="1" value="10" />
-      </div>
-      <div>
-        <label>是否啟用安全邊際</label>
-        <select id="safetyMode">
-          <option value="on" selected>啟用（次日收盤全出）</option>
-          <option value="off">不使用</option>
-        </select>
-      </div>
+    <div class="collapsible-header" data-target="controlRisk">
+        <h4 class="section-title" style="margin:0;">風控</h4>
+        <span class="arrow">▼</span>
     </div>
-
+    <div id="controlRisk" class="collapsible-content">
+        <div class="row">
+          <div>
+            <label>安全邊際（%）</label>
+            <input id="safetyFloor" type="number" min="1" max="50" step="1" value="10" />
+          </div>
+          <div>
+            <label>是否啟用安全邊際</label>
+            <select id="safetyMode">
+              <option value="on" selected>啟用（次日收盤全出）</option>
+              <option value="off">不使用</option>
+            </select>
+          </div>
+        </div>
+    </div>
+    
     <div class="hr"></div>
 
-    <h4 class="section-title">資金參數</h4>
-    <div class="row">
-      <div>
-        <label>固定保證金 (USD)</label>
-        <input id="margin" type="number" min="100" step="100" value="3000" />
-      </div>
-      <div>
-        <label>單次進場名目 (USD)</label>
-        <input id="lot" type="number" min="100" step="100" value="6000" />
-      </div>
+    <div class="collapsible-header" data-target="controlFund">
+        <h4 class="section-title" style="margin:0;">資金參數</h4>
+        <span class="arrow">▼</span>
     </div>
-    <div class="row">
-      <div>
-        <label>槓桿上限 (×)</label>
-        <input id="lev" type="number" min="1" max="100" step="1" value="20" />
-      </div>
-      <div>
-        <label style="color:var(--gold)">滿倉上限（自動）</label>
-        <input id="maxNotional" type="number" value="60000" disabled />
-      </div>
+    <div id="controlFund" class="collapsible-content">
+        <div class="row">
+          <div>
+            <label>固定保證金 (USD)</label>
+            <input id="margin" type="number" min="100" step="100" value="3000" />
+          </div>
+          <div>
+            <label>單次進場名目 (USD)</label>
+            <input id="lot" type="number" min="100" step="100" value="6000" />
+          </div>
+        </div>
+        <div class="row">
+          <div>
+            <label>槓桿上限 (×)</label>
+            <input id="lev" type="number" min="1" max="100" step="1" value="20" />
+          </div>
+          <div>
+            <label style="color:var(--gold)">滿倉上限（自動）</label>
+            <input id="maxNotional" type="number" value="60000" disabled />
+          </div>
+        </div>
     </div>
 
     <div class="footnote">
@@ -353,6 +424,11 @@
                 <thead></thead>
                 <tbody></tbody>
             </table>
+        </div>
+        
+        <div id="aiSuggestionCard" style="padding: 12px 16px; margin: 0 6px;">
+            <h4>AI 參數調整建議</h4>
+            <div id="aiAdviceContent">請先上傳檔案並執行回測以獲得建議。</div>
         </div>
         
         <div class="chart-wrap"><canvas id="chart"></canvas></div>
@@ -727,7 +803,7 @@
     const liqClass = res.liquidated ? 'bad' : 'ok'; // for traffic light
     const roiClass = res.roi > 0 ? 'data-ok' : (res.roi < 0 ? 'data-bad' : '');
     
-    // 1.1 Table 1: 基本統計與狀態 (5 metrics)
+    // 1.1 Table 1: 基本統計與狀態
     const metrics1Keys = ['樣本筆數', '區間', '進場次數', '出場次數', '是否爆倉'];
     const metrics1Values = [
         data.length || '—',
@@ -735,10 +811,10 @@
         res.nEntry,
         res.nExit,
         // 燈號顯示
-        `<span class="traffic-light ${liqClass}"></span>${res.liquidated ? '爆倉 (紅燈)' : '安全 (綠燈)'}` 
+        `<span class="traffic-light ${liqClass}"></span> ${res.liquidated ? '爆倉' : '安全'}` 
     ];
     
-    // 1.2 Table 2: 財務績效 (4 metrics)
+    // 1.2 Table 2: 財務績效
     const metrics2Keys = ['期末淨值 (USD)', 'ROI（保證金）', '最大回撤（保證金）', '期末安全邊際'];
     const metrics2Values = [
         fmt(res.equityEnd, 2),
@@ -746,7 +822,7 @@
         (res.mddPct != null) ? res.mddPct.toFixed(2) + '%' : '—',
         (res.safetyEnd != null) ? res.safetyEnd.toFixed(2) + '%' : '—'
     ];
-    const metrics2Classes = ['', roiClass, '', ''];
+    const metrics2Classes = ['', roiClass, 'data-bad', '']; // MDD 屬於風險指標，暫定為 data-bad
 
     // 2. 渲染 Table 1
     let head1Html = '<tr>';
@@ -772,7 +848,99 @@
     });
     body2Html += '</tr>';
     body2.innerHTML = body2Html;
+    
+    // 4. 渲染 AI 建議
+    renderAISuggestion(res, data.length > 0 ? (data[data.length-1].date - data[0].date) / (365.25 * 24 * 60 * 60 * 1000) : 1);
   }
+
+ // 【修正亂碼後的函式：使用標準符號和更清晰的排版】
+  function renderAISuggestion(res, totalYears){
+    const container = $('#aiAdviceContent');
+    // 獲取當前參數
+    const margin = Number($('#margin').value);
+    const lev = Number($('#lev').value);
+    const lot = Number($('#lot').value);
+    const entryPullback = Number($('#entryPullback').value);
+    const exitDrawdown = Number($('#exitDrawdown').value);
+    const entryLookback = Number($('#entryLookback').value);
+    
+    // 關鍵指標（百分比形式）
+    const roiPct = res.roi * 100;
+    const mddPct = res.mddPct;
+    
+    // 計算 Calmar Ratio (年化報酬 / 最大回撤)
+    const annualRoiPct = (totalYears > 0 && isFinite(totalYears)) ? roiPct / totalYears : roiPct;
+    // Calmar Ratio: 風險調整後報酬 (Risk-Adjusted Return)，比值越高越好
+    const calmarRatio = (mddPct > 0) ? (annualRoiPct / mddPct) : (roiPct > 0 ? Infinity : 0);
+
+    const nEntry = res.nEntry;
+    const dataLength = lastData ? lastData.length : 0;
+    
+    let adviceType = '💡 中性觀察';
+    let adviceClass = 'warn';
+    let summary = '';
+    let suggestions = [];
+    
+    // --- 邏輯判斷區 ---
+    
+    // 條件 1: 爆倉/高風險 (MDD = 100% / ROI = -100%)
+    if (res.liquidated) {
+        adviceType = '🚨 致命風險：已爆倉';
+        adviceClass = 'bad';
+        summary = `您的策略在本次回測中**已爆倉**，表示現有資金和槓桿配置的風險遠超市場波動承受能力。`;
+        suggestions.push(`當前槓桿 **${lev} 倍** 失敗。應立即將**槓桿降至 ${Math.max(1, Math.floor(lev * 0.5))} 倍以下**，直到策略穩定。`);
+        suggestions.push(`強烈建議啟用**安全邊際**並將**固定保證金 (Margin)** 提高到至少 ${fmt(margin * 1.5, 0)} USD。`);
+    } 
+    // 條件 2: 表現優異 (Calmar Ratio > 1.5 且 ROI > 15%)
+    else if (calmarRatio > 1.5 && roiPct > 15) {
+        adviceType = '🌟 績效強勁 / 高效能';
+        adviceClass = 'ok';
+        summary = `策略表現強勁且風險調整後報酬（**Calmar Ratio ${calmarRatio.toFixed(2)}**）優異，顯示策略在創造報酬的同時，能有效控制最大回撤。`;
+        suggestions.push(`可嘗試在當前槓桿下，**提高單次進場名目 (LOT)** 約 10-20% (例如 ${fmt(lot * 1.15, 0)} USD) 進行再次回測。`);
+        suggestions.push('建議保留**出場價低於倉位均價不出場**的限制，以維持低回撤優勢。');
+    } 
+    // 條件 3: 高風險低報酬 (MDD > 30% 且 Calmar Ratio < 0.5)
+    else if (mddPct > 30 && calmarRatio < 0.5) {
+        adviceType = '⚠️ 高回撤 / 低效能';
+        adviceClass = 'bad';
+        summary = `最大回撤高達 **${mddPct.toFixed(2)}%** 且風險調整後報酬（Calmar Ratio）低於 0.5，策略風險過高。`;
+        suggestions.push(`建議**提高入場回檔觸發 (%)** (例如 ${Math.min(30, entryPullback + 5)}%) 以確保買在深跌。`);
+        suggestions.push('應檢查出場條件，可能需要**降低出場回落觸發 (%)** 來更早地止損或鎖利。');
+        suggestions.push('考慮**降低單次進場名目 (LOT)**，降低單次虧損的影響。');
+    }
+    // 條件 4: 潛在漏接機會 (進場次數過少)
+    else if (nEntry < Math.max(5, dataLength / 180)) { // 每半年不到 2 次，視為過少
+        adviceType = '🟡 交易頻率低';
+        adviceClass = 'warn';
+        summary = '策略可能過於保守，進場次數過少，錯失了潛在的交易機會。';
+        suggestions.push(`嘗試**縮短滾動高點視窗（進場）** (例如 ${Math.max(30, entryLookback - 30)} 天) 來放寬入場限制。`);
+        suggestions.push(`或**降低回檔觸發 (%)** (例如 ${Math.max(5, entryPullback - 5)}%) 來提高進場次數。`);
+    }
+    // 條件 5: 中等表現/需要微調 (適用於您提供的範例結果)
+    else {
+        // 適用於 ROI 599.72%, Calmar Ratio 1.45 (中等偏上)
+        adviceType = '💡 中等穩健 / 優化空間';
+        adviceClass = 'warn';
+        summary = `目前總報酬 **${roiPct.toFixed(2)}%** 表現良好，但風險調整後報酬（Calmar Ratio ${calmarRatio.toFixed(2)}）在 1.5 附近，仍有提升空間。`;
+        
+        // 核心建議排版
+        suggestions.push(`**【策略平衡】**建議確保 **入場回檔 (${entryPullback}%) 大於等於 (>=) 出場回落 (${exitDrawdown}%)**，以確保有足夠的浮盈空間來應對回落觸發，減少假訊號。`);
+        suggestions.push(`**【降低波動】**若希望降低波動，請檢查 **「出場價低於倉位均價不出場」** 是否啟用。此限制有助於**控制最大回撤 (MDD)**。`);
+        suggestions.push(`**【持續測試】**建議專注於單一參數的微調（例如調整入場回檔 **+/- 5%**），觀察 Calmar Ratio 的變化。`);
+    }
+
+    // 渲染結果
+    let html = `
+        <div class="advice-type ${adviceClass}">【${adviceType}】</div>
+        <p style="margin-top: 5px; margin-bottom: 5px; font-size: 13px; color: var(--text);">${summary}</p>
+        <h5 style="font-size: 13px; color: var(--gold-soft); margin: 10px 0 5px;">具體行動建議：</h5>
+        <ul>
+            ${suggestions.map(s => `<li>${s}</li>`).join('')}
+        </ul>
+    `;
+    container.innerHTML = html;
+  }
+
 
   function renderEntriesTable(list){
     const head=$('#entriesTable thead tr'), body=$('#entriesTable tbody'); head.innerHTML=''; body.innerHTML='';
@@ -880,6 +1048,32 @@
     ); downloadCSV('entries.csv', csv); }
   function exportSummaryCSV(){ if(!lastRes) return; const r=lastRes; const csv=toCSV([{ samples:lastData?.length||0, range:(lastData?.length? iso(lastData[0].date)+' → '+iso(lastData[lastData.length-1].date):''), entries:r.nEntry, exits:r.nExit, liquidated:r.liquidated?'Y':'N', equity_end:r.equityEnd, roi_pct:r.roi*100, mdd_pct:r.mddPct, safety_end_pct:r.safetyEnd }], ['samples','range','entries','exits','liquidated','equity_end','roi_pct','mdd_pct','safety_end_pct'], ['samples','range','entries','exits','liquidated','equity_end','roi(%)','mdd(%)','safety_end(%)']); downloadCSV('summary.csv', csv); }
 
+  // === 摺疊面板邏輯 ===
+  function setupCollapsible(id) {
+    const header = document.querySelector(`.collapsible-header[data-target="${id}"]`);
+    const content = document.getElementById(id);
+
+    if (!header || !content) return;
+
+    // 初始狀態：展開
+    // 延遲設定 max-height 才能讓 transition work，否則會在載入時瞬間展開
+    setTimeout(() => {
+        content.style.maxHeight = content.scrollHeight + 'px';
+    }, 50); 
+    
+    header.addEventListener('click', () => {
+        const isCollapsed = header.classList.contains('collapsed');
+        header.classList.toggle('collapsed');
+        if (isCollapsed) {
+            // 展開
+            content.style.maxHeight = content.scrollHeight + 'px';
+        } else {
+            // 摺疊
+            content.style.maxHeight = '0';
+        }
+    });
+  }
+
   // 綁事件
   $('#file').addEventListener('change', async (e)=>{ const f=e.target.files&&e.target.files[0]; if(!f){ uiLog('沒有收到檔案'); return; } uiLog(`檔名：${f.name}，大小：${f.size}，讀取中…`); try{ const rows=await readAnyTabular(f); uiLog('已讀取 '+rows.length+' 行，解析中…'); df=parseRows(rows); uiLog('已解析 '+df.length+' 筆（'+iso(df[0].date)+' → '+iso(df[df.length-1].date)+'），計算中…'); computeIfReady(); }catch(err){ console.error(err); uiLog('錯誤：'+(err.message||err)); alert(err.message||err); } });
   let debounce=null; ['years','entryLookback','entryPullback','exitLookback','exitDrawdown','exitSellPct','lev','margin','lot','maxPerQ','maxExitPerQ','exitNonNegRoi','exitAboveAvgOnly','safetyFloor','safetyMode']
@@ -890,7 +1084,14 @@
 
   // 即時圖：初始與控制綁定
   async function initLive(){ await refreshLiveDaily(); startBinanceWS(); bindLiveAutoRefresh(); }
-  initLive();
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    // 預設展開風控和資金參數
+    setupCollapsible('controlRisk');
+    setupCollapsible('controlFund'); 
+    initLive();
+  });
+  
 
   // 右上即時圖與左側進/出場設定同步
   $('#entryLookback').addEventListener('change', refreshLiveDaily);

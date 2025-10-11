@@ -21,11 +21,16 @@
       --ok:#22C55E;            /* 正向 */
       --warn:#F59E0B;          /* 警示 */
       --bad:#EF4444;           /* 風險 */
-      /* 出場觸發價的新顏色（例如紫色） */
-      --exit-trigger-color: #A855F7; 
+      --exit-trigger-color:#A855F7; 
     }
 
-    html{overflow-y:scroll}
+    /* 重要：根治 Windows 捲軸寬度造成的重排抖動 */
+    html, body{
+      overflow-y:auto;
+      scrollbar-gutter: stable both-edges; /* 永遠預留垂直捲軸空間 */
+      height:100%;
+    }
+
     *{box-sizing:border-box}
     body{
       margin:0;font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans TC","PingFang TC","Microsoft JhengHei",Arial,sans-serif;
@@ -67,25 +72,12 @@
         align-items: center;
         margin: 10px 0;
         padding: 0 0 5px 0;
-        border-bottom: 1px dashed var(--line); /* 區隔線 */
+        border-bottom: 1px dashed var(--line);
     }
-    .collapsible-header:hover {
-        filter: brightness(1.1);
-    }
-    .collapsible-content {
-        overflow: hidden;
-        transition: max-height 0.3s ease-out;
-    }
-    .arrow {
-        display: inline-block;
-        transition: transform 0.3s;
-        font-size: 16px;
-        color: var(--gold-soft);
-        margin-right: 5px;
-    }
-    .collapsed .arrow {
-        transform: rotate(-90deg);
-    }
+    .collapsible-header:hover { filter: brightness(1.1); }
+    .collapsible-content { overflow: hidden; transition: max-height 0.3s ease-out; }
+    .arrow { display:inline-block; transition:transform 0.3s; font-size:16px; color:var(--gold-soft); margin-right:5px;}
+    .collapsed .arrow { transform: rotate(-90deg); }
 
     /* 結果表 */
     table{width:100%;border-collapse:collapse;border-spacing:0;border:1px solid rgba(201,162,39,.30);background:linear-gradient(180deg,rgba(233,209,138,.05),rgba(233,209,138,.02));border-radius:12px;overflow:hidden}
@@ -93,93 +85,31 @@
         padding:10px 12px;font-size:13px;
         border-right:1px solid rgba(201,162,39,.22);
     }
-    th:last-child, td:last-child {
-        border-right: none;
-    }
-    
-    /* 摘要表格特殊樣式 */
-    #summaryTable1, #summaryTable2 {
-        table-layout: fixed; /* 讓欄寬均等 */
-        margin-bottom: 0px; 
-        border: none;
-    }
-    #summaryTable1 th, #summaryTable1 td, 
-    #summaryTable2 th, #summaryTable2 td {
-        white-space: nowrap;
-        border: none;
-        padding: 8px 10px;
-    }
-    #summaryTable1 th:last-child, #summaryTable2 th:last-child,
-    #summaryTable1 td:last-child, #summaryTable2 td:last-child {
-        border-right: none;
-    }
+    th:last-child, td:last-child { border-right:none; }
 
-    /* 確保所有 th 都有底線分隔 */
-    #summaryTable1 thead th, #summaryTable2 thead th {
-        border-bottom: 1px solid rgba(201,162,39,.22);
-    }
-    
-    /* 數據行樣式 */
-    #summaryTable1 td, #summaryTable2 td {
-        text-align: center;
-        font-weight: 600;
-        color: var(--text);
-    }
-    
-    /* 績效顏色標籤 */
+    /* 摘要表格 */
+    #summaryTable1, #summaryTable2 { table-layout:fixed; margin-bottom:0; border:none; }
+    #summaryTable1 th, #summaryTable1 td, 
+    #summaryTable2 th, #summaryTable2 td { white-space:nowrap; border:none; padding:8px 10px; }
+    #summaryTable1 thead th, #summaryTable2 thead th { border-bottom:1px solid rgba(201,162,39,.22); }
+    #summaryTable1 td, #summaryTable2 td { text-align:center; font-weight:600; color:var(--text); }
     .data-ok { color: var(--ok); }
     .data-bad { color: var(--bad); }
     .data-warn { color: var(--warn); }
 
     /* 紅綠燈燈號 */
-    .traffic-light {
-        height: 12px;
-        width: 12px;
-        background-color: var(--ok); /* Default green */
-        border-radius: 50%;
-        display: inline-block;
-        margin-right: 5px;
-        box-shadow: 0 0 4px rgba(0, 0, 0, 0.5);
-        vertical-align: middle;
-    }
-    .traffic-light.bad {
-        background-color: var(--bad); /* Red for liquidated */
-    }
+    .traffic-light { height:12px; width:12px; background-color:var(--ok); border-radius:50%; display:inline-block; margin-right:5px; box-shadow:0 0 4px rgba(0,0,0,0.5); vertical-align:middle; }
+    .traffic-light.bad { background-color: var(--bad); }
 
-    /* AI 建議卡片樣式 */
-    #aiSuggestionCard {
-        padding: 12px;
-        border: 1px solid rgba(201,162,39,.4);
-        border-radius: 10px;
-        background: rgba(201,162,39,0.05);
-    }
-    #aiSuggestionCard h4 {
-        margin-top: 0;
-        margin-bottom: 8px;
-        font-size: 14px;
-        color: var(--gold-soft);
-        display: flex;
-        align-items: center;
-    }
-    #aiSuggestionCard .advice-type {
-        font-weight: bold;
-        margin-right: 8px;
-        color: var(--ok);
-    }
-    #aiSuggestionCard .advice-type.bad {
-        color: var(--bad);
-    }
-    #aiSuggestionCard .advice-type.warn {
-        color: var(--warn);
-    }
-    #aiSuggestionCard ul {
-        list-style: disc;
-        padding-left: 20px;
-        margin: 6px 0 0;
-        font-size: 13px;
-        color: var(--muted);
-    }
-    /* 通用表格樣式 */
+    /* AI 建議卡片 */
+    #aiSuggestionCard { padding:12px; border:1px solid rgba(201,162,39,.4); border-radius:10px; background:rgba(201,162,39,0.05); }
+    #aiSuggestionCard h4 { margin:0 0 8px; font-size:14px; color:var(--gold-soft); display:flex; align-items:center; }
+    #aiSuggestionCard .advice-type { font-weight:bold; margin-right:8px; color:var(--ok); }
+    #aiSuggestionCard .advice-type.bad { color:var(--bad); }
+    #aiSuggestionCard .advice-type.warn { color:var(--warn); }
+    #aiSuggestionCard ul { list-style:disc; padding-left:20px; margin:6px 0 0; font-size:13px; color:var(--muted); }
+
+    /* 表頭與 hover */
     th{
       text-align:left;color:var(--gold-soft);
       background:linear-gradient(180deg,rgba(233,209,138,.08),rgba(233,209,138,.04));
@@ -199,17 +129,12 @@
     .scrollbox{max-height:300px;overflow:auto;scrollbar-gutter:stable}
     .hr{height:1px;background:linear-gradient(90deg,rgba(233,209,138,.25),rgba(233,209,138,.05));margin:10px 0}
   
-    /* 回測結果區塊佈局調整 */
-    .backtest-results{
-        display: flex;
-        flex-direction: column;
-        gap: 16px; /* 增加主要區塊間距 */
-        padding-top: 0;
-    }
-    .backtest-results .section-title{
-        margin-top: 10px;
-        margin-bottom: 0;
-    }
+    .backtest-results{ display:flex; flex-direction:column; gap:16px; padding-top:0; }
+    .backtest-results .section-title{ margin-top:10px; margin-bottom:0; }
+
+    /* 關鍵：固定圖容器高度，Canvas 吃滿容器，避免 Chart.js 高度回彈 */
+    .chart-wrap{ padding:10px 6px; height:360px; }
+    #liveChart, #chart { width:100% !important; height:100% !important; }
   </style>
 </head>
 <body>
@@ -450,6 +375,22 @@
 </main>
 
 <script>
+  /* === Chart.js 全域預設（關閉動畫、遵從容器高度） === */
+  if (window.Chart && Chart.defaults) {
+    Chart.defaults.animation = false;
+    Chart.defaults.responsive = true;
+    Chart.defaults.maintainAspectRatio = false;
+  }
+
+  /* === 視窗 resize 防抖（避免無限 resize 迴圈） === */
+  let _resizeHold = false;
+  let _resizeT = null;
+  window.addEventListener('resize', () => {
+    _resizeHold = true;
+    clearTimeout(_resizeT);
+    _resizeT = setTimeout(() => { _resizeHold = false; }, 250);
+  });
+
   /* === 共用工具 === */
   const $ = s => document.querySelector(s);
   const iso = d => new Date(d).toISOString().slice(0,10);
@@ -470,9 +411,7 @@
   const cExit  = '#F59E0B';          // 出場點（橘）
   const cRH    = 'rgba(233,209,138,.85)'; // RH 線（淡金）
   const cTrigger = 'rgba(201,162,39,.85)';// 觸發線（亮金）
-  // 出場觸發線的顏色（紫色）
-  const cTriggerExit = '#A855F7';    
-
+  const cTriggerExit = '#A855F7';     // 出場觸發（紫）
 
   async function fetchBinanceKlines(symbol, limitDays){
     const url = `https://api.binance.com/api/v3/klines?symbol=${encodeURIComponent(symbol)}&interval=1d&limit=${limitDays}`;
@@ -488,53 +427,57 @@
     let rh=-Infinity; for(let i=start;i<=lastIdx;i++){ if(data[i].close>rh) rh=data[i].close; }
     return { rh: isFinite(rh)?rh:null };
   }
+
+  /* ---- 建立 / 重建即時圖（加入 resize 守門 + RAF） ---- */
   function renderLiveChart(){
-    if(typeof Chart==='undefined') return; const ctx=$('#liveChart').getContext('2d');
-    const labels = liveData.map(x=> iso(x.time));
-    const price  = liveData.map(x=> x.close);
-    
-    // 恢復RH進場線，並更名
+    if (typeof Chart === 'undefined') return;
+    const ctx = $('#liveChart').getContext('2d');
+    const labels = liveData.map(x => iso(x.time));
+    const price  = liveData.map(x => x.close);
     const rhIn   = (liveRH_entry!=null)? labels.map(_=> liveRH_entry): labels.map(_=> null);
     const triIn  = (liveTrigger_entry!=null)? labels.map(_=> liveTrigger_entry): labels.map(_=> null);
-    
-    // 移除RH出場線
     const triOut = (liveTrigger_exit!=null)? labels.map(_=> liveTrigger_exit): labels.map(_=> null);
     const mkt    = (lastLivePrice!=null)? labels.map(_=> lastLivePrice): labels.map(_=> null);
 
-    if(liveChart) liveChart.destroy();
-    liveChart = new Chart(ctx,{
-      type:'line',
-      data:{ labels,
-        datasets:[
-          { label:`${currentSymbol} 收盤(1D)`, data:price, pointRadius:0, borderColor:cPrice },
-          { label:'近 N 日高點', data:rhIn, borderDash:[6,4], pointRadius:0, borderColor:cRH }, // 【名稱變更】
-          { label:'觸發價（進場）', data:triIn, borderDash:[3,3], pointRadius:0, borderColor:cTrigger },
-          { label:'觸發價（出場）', data:triOut, borderDash:[3,3], pointRadius:0, borderColor:cTriggerExit }, // 【顏色變更】
-          { label:'即時現價', data:mkt, borderDash:[1,1], pointRadius:0, borderColor:'#7dd3fc' }
-        ]
-      },
-      options:{
-        responsive:true, resizeDelay:200, animation:false,
-        interaction:{mode:'index',intersect:false},
-        plugins:{
-          legend:{position:'top', labels:{color:'#EDEFF5'}},
-          tooltip:{callbacks:{label:(c)=> c.dataset.label+': '+fmt(c.parsed.y,2)}}
+    if (liveChart) liveChart.destroy();
+    if (_resizeHold) { requestAnimationFrame(() => renderLiveChart()); return; }
+
+    requestAnimationFrame(() => {
+      liveChart = new Chart(ctx,{
+        type:'line',
+        data:{ labels,
+          datasets:[
+            { label:`${currentSymbol} 收盤(1D)`, data:price, pointRadius:0, borderColor:cPrice },
+            { label:'近 N 日高點', data:rhIn, borderDash:[6,4], pointRadius:0, borderColor:cRH },
+            { label:'觸發價（進場）', data:triIn, borderDash:[3,3], pointRadius:0, borderColor:cTrigger },
+            { label:'觸發價（出場）', data:triOut, borderDash:[3,3], pointRadius:0, borderColor:cTriggerExit },
+            { label:'即時現價', data:mkt, borderDash:[1,1], pointRadius:0, borderColor:'#7dd3fc' }
+          ]
         },
-        scales:{
-          x:{ticks:{color:'#C9D3EA', maxRotation:0,autoSkip:true,maxTicksLimit:12}, grid:{color:'rgba(233,209,138,.12)'}},
-          y:{beginAtZero:false, ticks:{color:'#C9D3EA'}, grid:{color:'rgba(233,209,138,.12)'}}
+        options:{
+          responsive:true, resizeDelay:200, animation:false, maintainAspectRatio:false,
+          interaction:{mode:'index',intersect:false},
+          plugins:{
+            legend:{position:'top', labels:{color:'#EDEFF5'}},
+            tooltip:{callbacks:{label:(c)=> c.dataset.label+': '+fmt(c.parsed.y,2)}}
+          },
+          scales:{
+            x:{ticks:{color:'#C9D3EA', maxRotation:0,autoSkip:true,maxTicksLimit:12}, grid:{color:'rgba(233,209,138,.12)'}},
+            y:{beginAtZero:false, ticks:{color:'#C9D3EA'}, grid:{color:'rgba(233,209,138,.12)'}}
+          }
         }
-      }
+      });
     });
   }
+
   function updateLiveInfoUI(){
     $('#live_price').textContent = (lastLivePrice!=null)? lastLivePrice.toLocaleString(undefined,{maximumFractionDigits:2}) : '—';
-    // 更新 RH 進場名稱
     $('#live_rh').textContent    = (liveRH_entry!=null)? liveRH_entry.toLocaleString(undefined,{maximumFractionDigits:2}) : '—';
     $('#live_trigger').textContent = (liveTrigger_entry!=null)? liveTrigger_entry.toLocaleString(undefined,{maximumFractionDigits:2}) : '—';
     $('#live_rh_exit').textContent = (liveRH_exit!=null)? liveRH_exit.toLocaleString(undefined,{maximumFractionDigits:2}) : '—';
     $('#live_trigger_exit').textContent = (liveTrigger_exit!=null)? liveTrigger_exit.toLocaleString(undefined,{maximumFractionDigits:2}) : '—';
   }
+
   async function refreshLiveDaily(){
     try{
       const N_in  = Number($('#entryLookback').value);
@@ -546,30 +489,58 @@
       const need = (rangeCode==='ALL')?1500:Math.min(1500, rangeDays + Math.max(N_in,N_out) + 10);
       const rows = await fetchBinanceKlines(currentSymbol, need);
       liveDataFull = rows;
+
       // RH（不含當日）
       liveRH_entry = calcRollingHigh(liveDataFull, N_in).rh;
       liveTrigger_entry = (liveRH_entry!=null)? liveRH_entry*(1-ddIn): null;
       liveRH_exit  = calcRollingHigh(liveDataFull, N_out).rh;
       liveTrigger_exit = (liveRH_exit!=null)? liveRH_exit*(1-ddOut): null;
+
       // 顯示區間
       if(rangeCode==='ALL'){ liveData = liveDataFull.slice(); }
       else { const cut=Math.min(rangeDays, liveDataFull.length); liveData = liveDataFull.slice(liveDataFull.length-cut); }
+
       if(lastLivePrice==null && liveDataFull.length){ lastLivePrice = liveDataFull[liveDataFull.length-1].close; }
+
       updateLiveInfoUI(); renderLiveChart();
       $('#live_note').textContent = `已載入 ${currentSymbol} 的 Binance 1D K 線（區間：${rangeCode}）。近 N/M 日 RH 不含當日；WS 秒級更新現價。`;
     }catch(err){ console.error(err); $('#live_note').textContent='無法載入 Binance K 線（可能網路或 CORS）。'; }
   }
-  function startBinanceWS(){ stopBinanceWS(); try{
-    const stream = `${currentSymbol.toLowerCase()}@miniTicker`;
-    ws = new WebSocket(`wss://stream.binance.com:9443/ws/${stream}`);
-    ws.onmessage = (ev)=>{ try{ const msg=JSON.parse(ev.data); const p=Number(msg.c); if(isFinite(p)){ lastLivePrice=p; updateLiveInfoUI();
-      const now=Date.now(); if(liveChart && (now-lastWSUpdate)>=250){ lastWSUpdate=now; const idx=liveChart.data.datasets.findIndex(d=>d.label==='即時現價'); if(idx>=0){ const len=liveChart.data.labels.length; liveChart.data.datasets[idx].data = Array(len).fill(p); liveChart.update('none'); } } } }catch(_){} };
-  }catch(_){} }
+
+  function startBinanceWS(){
+    stopBinanceWS();
+    try{
+      const stream = `${currentSymbol.toLowerCase()}@miniTicker`;
+      ws = new WebSocket(`wss://stream.binance.com:9443/ws/${stream}`);
+      ws.onmessage = (ev)=>{
+        try{
+          const msg=JSON.parse(ev.data);
+          const p=Number(msg.c);
+          if(isFinite(p)){
+            lastLivePrice=p;
+            updateLiveInfoUI();
+            const now=Date.now();
+            if (liveChart && liveChart.data && Array.isArray(liveChart.data.labels) && (now-lastWSUpdate)>=250){
+              lastWSUpdate=now;
+              const idx=liveChart.data.datasets.findIndex(d=>d.label==='即時現價');
+              if(idx>=0){
+                const len=liveChart.data.labels.length||0;
+                if(len>0){
+                  liveChart.data.datasets[idx].data = Array(len).fill(p);
+                  liveChart.update('none');
+                }
+              }
+            }
+          }
+        }catch(_){}
+      };
+    }catch(_){}
+  }
   function stopBinanceWS(){ if(ws){ try{ws.close();}catch(_){} ws=null; } }
   function bindLiveAutoRefresh(){ setInterval(refreshLiveDaily, 5*60*1000); }
   async function initLiveModule(){ await refreshLiveDaily(); startBinanceWS(); bindLiveAutoRefresh(); }
   $('#symbol').addEventListener('change', async (e)=>{ currentSymbol=e.target.value||'BTCUSDT'; lastLivePrice=null; await refreshLiveDaily(); startBinanceWS(); });
-  $('#range').addEventListener('change', async ()=>{ await refreshLiveDaily(); if(liveChart&& lastLivePrice!=null){ const idx=liveChart.data.datasets.findIndex(d=>d.label==='即時現價'); if(idx>=0){ const len=liveChart.data.labels.length; liveChart.data.datasets[idx].data = Array(len).fill(lastLivePrice); liveChart.update('none'); } } });
+  $('#range').addEventListener('change', async ()=>{ await refreshLiveDaily(); if(liveChart&& lastLivePrice!=null){ const idx=liveChart.data.datasets.findIndex(d=>d.label==='即時現價'); if(idx>=0){ const len=liveChart.data.labels.length||0; if(len>0){ liveChart.data.datasets[idx].data = Array(len).fill(lastLivePrice); liveChart.update('none'); } } } });
 
   /* === 上傳回測 === */
   window.addEventListener('error',(e)=>{ const el=$('#status'); if(el) el.textContent='錯誤：'+(e.message||e.error||e.filename||'未知錯誤'); });
@@ -586,30 +557,21 @@
   // 使用 html2canvas 截圖整個回測結果區，包括圖表和表格
   async function exportChartPng(){
     if(!lastRes) return;
-    
-    // 1. 暫時展開表格（移除捲動限制，讓 html2canvas 截圖所有內容）
     const scrollbox = $('#entriesScrollbox');
     const originalMaxHeight = scrollbox.style.maxHeight;
     const originalOverflow = scrollbox.style.overflow;
-    scrollbox.style.maxHeight = 'none'; // 取消高度限制
+    scrollbox.style.maxHeight = 'none';
     scrollbox.style.overflow = 'visible';
-    
-    // 2. 截圖目標區塊
     const targetElement = $('#resultCard'); 
-    
     try {
         const canvas = await html2canvas(targetElement, {
-            scale: 2, // 提高解析度
+            scale: 2,
             useCORS: true,
             allowTaint: true,
-            backgroundColor: '#0A1221' // 確保背景色正確
+            backgroundColor: '#0A1221'
         });
-
-        // 3. 恢復表格捲動設定
         scrollbox.style.maxHeight = originalMaxHeight;
         scrollbox.style.overflow = originalOverflow;
-
-        // 4. 觸發下載
         const dataURL = canvas.toDataURL('image/png');
         const a = document.createElement('a');
         a.href = dataURL;
@@ -617,9 +579,7 @@
         document.body.appendChild(a);
         a.click();
         setTimeout(()=>{ document.body.removeChild(a); }, 0);
-
     } catch (error) {
-        // 恢復表格捲動設定以防萬一
         scrollbox.style.maxHeight = originalMaxHeight;
         scrollbox.style.overflow = originalOverflow;
         console.error('PNG 截圖失敗:', error);
@@ -653,13 +613,12 @@
     const {highs: prevHighEntry, idxs: prevHighEntryIdx} = rollingHighPrevWithIdx(prices, params.entryLookback);
     const {highs: prevHighExit,  idxs: prevHighExitIdx}  = rollingHighPrevWithIdx(prices, params.exitLookback);
 
-    const entries=[]; // 記錄進/出事件
+    const entries=[]; 
     const path = data.map(x=> ({ 日期:x.date, 收市:x.close, avg_price:NaN, position_btc:0, equity:params.margin, liq_price:null, safetyPct:null }));
 
     const maxNotional = params.leverage * params.margin;
-    let cumNotional=0, posBTC=0, avgPrice=NaN, realized=0; // realized for partial exits
+    let cumNotional=0, posBTC=0, avgPrice=NaN, realized=0;
     let perQ={}, perQExit={}, nEntry=0, nExit=0, liquidated=false, mdd=0, peakEquity=-1e18, pendingForce=false;
-    // 用於追蹤上一次創下的 M 日高點（用於跌破前高出場邏輯）
     let lastPeakPrice = -1; 
 
     for(let i=0;i<data.length;i++){
@@ -667,12 +626,31 @@
       const p = prices[i];
       const qk = quarterKey(data[i].date);
 
-      // 0) 若有強制出清排程，今日收盤先執行
-      if(pendingForce && posBTC>0){ realized += posBTC * (p - avgPrice); posBTC=0; avgPrice=NaN; cumNotional=0; pendingForce=false; nExit++; entries.push({ 類型:'強制全出', 日期:data[i].date, 價格:p, 比例:100 }); }
+      // 0) 強制出清
+      if(pendingForce && posBTC>0){ 
+        const realizedGain = posBTC * (p - avgPrice);
+        realized += realizedGain; 
+        posBTC=0; avgPrice=NaN; cumNotional=0; pendingForce=false; nExit++; 
+        entries.push({ 
+            類型:'強制全出', 日期:data[i].date, 價格:p, 比例:100, 
+            Realized_Gain: realizedGain,
+            Cumulative_Profit: realized,
+            ROI_USDT: 0, ROI_PCT: -100, 倉位槓桿倍數: null 
+        }); 
+      }
 
-      // 1) 爆倉判定（以收盤、含已實現損益）
+      // 1) 爆倉判定
       const equityNow = realized + (isFinite(avgPrice)? (p-avgPrice)*posBTC: 0) + params.margin;
-      if(equityNow <= 0){ liquidated=true; entries.push({ 類型:'爆倉', 日期:data[i].date, 價格:p, 比例:100 }); break; }
+      if(equityNow <= 0){ 
+        liquidated=true; 
+        entries.push({ 
+            類型:'爆倉', 日期:data[i].date, 價格:p, 比例:100,
+            Realized_Gain: -(equityNow - params.margin),
+            Cumulative_Profit: realized - (equityNow - params.margin),
+            ROI_USDT: -params.margin, ROI_PCT: -100, 倉位槓桿倍數: null 
+        }); 
+        break; 
+      }
 
       // 2) 出場規則
       const phOut = prevHighExit[i];
@@ -681,10 +659,9 @@
 
       let isExitTriggered = false;
       let exitReason = '';
-      let triggerPrice = null; // 記錄觸發價格，用於記錄
+      let triggerPrice = null;
 
       if(posBTC>0){
-        // 條件 A: 原有的「回落觸發」
         if(isFinite(phOut) && phOut!=null){
           const triggerOut = phOut * (1 - params.exitDrawdown);
           if(p <= triggerOut){
@@ -693,9 +670,6 @@
             triggerPrice = triggerOut;
           }
         }
-        
-        // 條件 B: 跌破前高觸發
-        // 若已有追蹤高點，且收盤價跌破該追蹤高點，則觸發
         if(lastPeakPrice > 0 && p < lastPeakPrice){
           isExitTriggered = true;
           exitReason = `跌破前高(${params.exitLookback}日新高價)`;
@@ -703,24 +677,21 @@
         }
       }
 
-      if(isExitTriggered && posBTC>0){ // 只要 A 或 B 滿足，即進入出場流程
+      if(isExitTriggered && posBTC>0){
         const usedExit = perQExit[qk] || 0;
         const roiGate = params.exitNonNegRoi ? (equityNow - params.margin >= 0) : true;
-        
-        // 保留的限制：出場價低於倉位均價不出場
         const avgGate = params.exitAboveAvgOnly ? (!isFinite(avgPrice) || p >= avgPrice) : true;
-        
         if(usedExit < params.exitMaxPerQuarter && roiGate && avgGate){
           const sellFrac = Math.min(1, Math.max(0, params.exitSellPct/100));
           const sellBTC  = posBTC * sellFrac;
-          
           if(sellBTC>0){
-            realized += sellBTC * (p - avgPrice);
+            const realizedGain = sellBTC * (p - avgPrice); 
+            realized += realizedGain;
+
             posBTC  -= sellBTC;
-            // 重新計算 cumNotional (假設等比例減少)
             cumNotional = (posBTC>0)? cumNotional * (posBTC / (posBTC + sellBTC)): 0;
-            
             perQExit[qk] = usedExit + 1; nExit++;
+
             const equityAfterExit = realized + (isFinite(avgPrice)? (p-avgPrice)*posBTC:0) + params.margin;
             const notionalAfterExit = posBTC * p;
             const levXExit = (equityAfterExit>0)? (notionalAfterExit/equityAfterExit) : null;
@@ -728,14 +699,19 @@
             entries.push({ 
                 類型: exitReason + ` (${Math.round(params.exitSellPct)}%)`, 
                 日期:data[i].date, 價格:p, 參考高點: phOut, 參考高點日期: phOutDate, 觸發價: triggerPrice, 
-                名目部位USD: -sellBTC * p, 累積名目USD: cumNotional, 倉位均價: avgPrice, 持倉價值USD: notionalAfterExit, 出場比例: Math.round(params.exitSellPct), ROI_USDT: (equityAfterExit - params.margin), ROI_PCT: (equityAfterExit/params.margin - 1) * 100, 倉位槓桿倍數: levXExit 
+                名目部位USD: -sellBTC * p, 累積名目USD: cumNotional, 倉位均價: avgPrice, 持倉價值USD: notionalAfterExit, 出場比例: Math.round(params.exitSellPct), 
+                Realized_Gain: realizedGain, 
+                Cumulative_Profit: realized, 
+                ROI_USDT: (equityAfterExit - params.margin), 
+                ROI_PCT: (equityAfterExit/params.margin - 1) * 100, 
+                倉位槓桿倍數: levXExit 
             });
             if(posBTC===0){ avgPrice=NaN; lastPeakPrice = -1; }
           }
         }
       }
 
-      // 3) 進場（可在賣出後再判斷）
+      // 3) 進場
       const phIn = prevHighEntry[i];
       const phInIdx = prevHighEntryIdx[i];
       const phInDate = (phInIdx!=null && phInIdx>=0)? data[phInIdx].date : null;
@@ -751,35 +727,36 @@
             avgPrice=newAvg; posBTC=newPos; cumNotional += addNotional; perQ[qk]=used+1; nEntry++;
             const levX = (params.margin + (p-newAvg)*newPos)>0 ? (newPos*p) / (params.margin + (p-newAvg)*newPos) : null;
             const equityAfterEntry = (params.margin + (p - newAvg)*newPos) + realized; const notionalAfterEntry = newPos * p; 
-            entries.push({ 類型:'進場', 日期:data[i].date, 價格:p, 參考高點: phIn, 參考高點日期: phInDate, 觸發價: triggerIn, 名目部位USD:addNotional, 累積名目USD:cumNotional, 倉位均價:newAvg, 持倉價值USD:notionalAfterEntry, ROI_USDT:(equityAfterEntry - params.margin), ROI_PCT:(equityAfterEntry/params.margin - 1) * 100, 倉位槓桿倍數:levX });
+            entries.push({ 
+                類型:'進場', 日期:data[i].date, 價格:p, 參考高點: phIn, 參考高點日期: phInDate, 觸發價: triggerIn, 
+                名目部位USD:addNotional, 累積名目USD:cumNotional, 倉位均價:newAvg, 持倉價值USD:notionalAfterEntry, 
+                Realized_Gain: 0, 
+                Cumulative_Profit: realized, 
+                ROI_USDT:(equityAfterEntry - params.margin), 
+                ROI_PCT:(equityAfterEntry/params.margin - 1) * 100, 
+                倉位槓桿倍數:levX 
+            });
           }
         }
       }
       
-      // 更新最後高點狀態 (M日高點)
-      if (isFinite(phOut) && phOut!=null && p > phOut) {
-          // 當前收盤價突破 M 日高點，更新追蹤高點
-          lastPeakPrice = p; 
-      }
-      // 如果沒有倉位，重置追蹤高點
-      if(posBTC === 0){
-          lastPeakPrice = -1;
-      }
+      // 更新追蹤高點
+      if (isFinite(phOut) && phOut!=null && p > phOut) lastPeakPrice = p; 
+      if(posBTC === 0) lastPeakPrice = -1;
 
-      // 4) 記錄每日路徑、計算安全邊際 & MDD
+      // 4) 每日路徑、MDD、安全邊際
       const equity = realized + (isFinite(avgPrice)? (p-avgPrice)*posBTC:0) + params.margin;
-      const liq = (posBTC>0 && isFinite(avgPrice))? (avgPrice - (params.margin/posBTC)) : null; // Equity=0 → P=avg - margin/pos
+      const liq = (posBTC>0 && isFinite(avgPrice))? (avgPrice - (params.margin/posBTC)) : null;
       path[i].avg_price = avgPrice; path[i].position_btc = posBTC; path[i].equity = equity; path[i].liq_price = liq;
       path[i].safetyPct = (liq!=null)? ((p - liq)/p*100) : null;
 
       if(equity > peakEquity) peakEquity = equity;
       const dd = peakEquity - equity; if(dd > mdd) mdd = dd;
 
-      // 5) 安全邊際門檻（若啟用）：小於門檻 → 排程「次日收盤」全出
+      // 5) 安全邊際門檻
       if(params.safetyOn && posBTC>0 && path[i].safetyPct!=null && path[i].safetyPct < params.safetyFloorPct){ pendingForce = true; }
     }
 
-    // 收尾
     const equityEnd = liquidated ? 0 : path[path.length-1].equity;
     const roi = liquidated ? -1 : (equityEnd/params.margin - 1);
     const mddPct = mdd / params.margin * 100;
@@ -788,91 +765,56 @@
     return { entries, path, liquidated, roi, equityEnd, mddPct, nEntry, nExit, safetyEnd };
   }
 
-  // 【修改函式】將摘要結果渲染為橫向表格
+  // 摘要渲染（兩表）
   function renderSummary(data, res, years){
     const head1 = $('#summaryTable1 thead');
     const body1 = $('#summaryTable1 tbody');
     const head2 = $('#summaryTable2 thead');
     const body2 = $('#summaryTable2 tbody');
-    head1.innerHTML = '';
-    body1.innerHTML = '';
-    head2.innerHTML = '';
-    body2.innerHTML = '';
+    head1.innerHTML=''; body1.innerHTML=''; head2.innerHTML=''; body2.innerHTML='';
     
-    // 1. 準備數據和樣式
-    const liqClass = res.liquidated ? 'bad' : 'ok'; // for traffic light
+    const liqClass = res.liquidated ? 'bad' : 'ok';
     const roiClass = res.roi > 0 ? 'data-ok' : (res.roi < 0 ? 'data-bad' : '');
     
-    // 1.1 Table 1: 基本統計與狀態
     const metrics1Keys = ['樣本筆數', '區間', '進場次數', '出場次數', '是否爆倉'];
     const metrics1Values = [
         data.length || '—',
         data.length ? (iso(data[0].date)+' → '+iso(data[data.length-1].date)+'（近 '+years+' 年）') : '—',
         res.nEntry,
         res.nExit,
-        // 燈號顯示
-        `<span class="traffic-light ${liqClass}"></span> ${res.liquidated ? '爆倉' : '安全'}` 
+        `<span class="traffic-light ${liqClass}"></span> ${res.liquidated ? '爆倉' : '安全'}`
     ];
     
-    // 1.2 Table 2: 財務績效
-    const metrics2Keys = ['期末淨值 (USD)', 'ROI（保證金）', '最大回撤（保證金）', '期末安全邊際'];
+    const metrics2Keys = ['期末淨值 (USD)', 'ROI（保證金）', '最大回撤（MDD）', '期末安全邊際'];
     const metrics2Values = [
         fmt(res.equityEnd, 2),
         (res.roi == null) ? '—' : (res.roi * 100).toFixed(2) + '%',
         (res.mddPct != null) ? res.mddPct.toFixed(2) + '%' : '—',
         (res.safetyEnd != null) ? res.safetyEnd.toFixed(2) + '%' : '—'
     ];
-    const metrics2Classes = ['', roiClass, 'data-bad', '']; // MDD 屬於風險指標，暫定為 data-bad
+    const metrics2Classes = ['', roiClass, 'data-bad', ''];
 
-    // 2. 渲染 Table 1
-    let head1Html = '<tr>';
-    metrics1Keys.forEach(key => { head1Html += `<th>${key}</th>`; });
-    head1Html += '</tr>';
-    head1.innerHTML = head1Html;
+    let head1Html = '<tr>'; metrics1Keys.forEach(k=> head1Html += `<th>${k}</th>`); head1Html += '</tr>'; head1.innerHTML = head1Html;
+    let body1Html = '<tr>'; metrics1Values.forEach(v=> body1Html += `<td>${v}</td>`); body1Html += '</tr>'; body1.innerHTML = body1Html;
 
-    let body1Html = '<tr>';
-    metrics1Values.forEach(value => { body1Html += `<td>${value}</td>`; });
-    body1Html += '</tr>';
-    body1.innerHTML = body1Html;
-    
-    // 3. 渲染 Table 2
-    let head2Html = '<tr>';
-    metrics2Keys.forEach(key => { head2Html += `<th>${key}</th>`; });
-    head2Html += '</tr>';
-    head2.innerHTML = head2Html;
+    let head2Html = '<tr>'; metrics2Keys.forEach(k=> head2Html += `<th>${k}</th>`); head2Html += '</tr>'; head2.innerHTML = head2Html;
+    let body2Html = '<tr>'; metrics2Values.forEach((v,i)=> body2Html += `<td class="${metrics2Classes[i]||''}">${v}</td>`); body2Html += '</tr>'; body2.innerHTML = body2Html;
 
-    let body2Html = '<tr>';
-    metrics2Values.forEach((value, index) => { 
-        const styleClass = metrics2Classes[index] || '';
-        body2Html += `<td class="${styleClass}">${value}</td>`; 
-    });
-    body2Html += '</tr>';
-    body2.innerHTML = body2Html;
-    
-    // 4. 渲染 AI 建議
     renderAISuggestion(res, data.length > 0 ? (data[data.length-1].date - data[0].date) / (365.25 * 24 * 60 * 60 * 1000) : 1);
   }
 
- // 【修正亂碼後的函式：使用標準符號和更清晰的排版】
   function renderAISuggestion(res, totalYears){
     const container = $('#aiAdviceContent');
-    // 獲取當前參數
     const margin = Number($('#margin').value);
     const lev = Number($('#lev').value);
     const lot = Number($('#lot').value);
     const entryPullback = Number($('#entryPullback').value);
     const exitDrawdown = Number($('#exitDrawdown').value);
     const entryLookback = Number($('#entryLookback').value);
-    
-    // 關鍵指標（百分比形式）
     const roiPct = res.roi * 100;
     const mddPct = res.mddPct;
-    
-    // 計算 Calmar Ratio (年化報酬 / 最大回撤)
     const annualRoiPct = (totalYears > 0 && isFinite(totalYears)) ? roiPct / totalYears : roiPct;
-    // Calmar Ratio: 風險調整後報酬 (Risk-Adjusted Return)，比值越高越好
     const calmarRatio = (mddPct > 0) ? (annualRoiPct / mddPct) : (roiPct > 0 ? Infinity : 0);
-
     const nEntry = res.nEntry;
     const dataLength = lastData ? lastData.length : 0;
     
@@ -881,55 +823,40 @@
     let summary = '';
     let suggestions = [];
     
-    // --- 邏輯判斷區 ---
-    
-    // 條件 1: 爆倉/高風險 (MDD = 100% / ROI = -100%)
     if (res.liquidated) {
         adviceType = '🚨 致命風險：已爆倉';
         adviceClass = 'bad';
         summary = `您的策略在本次回測中**已爆倉**，表示現有資金和槓桿配置的風險遠超市場波動承受能力。`;
         suggestions.push(`當前槓桿 **${lev} 倍** 失敗。應立即將**槓桿降至 ${Math.max(1, Math.floor(lev * 0.5))} 倍以下**，直到策略穩定。`);
         suggestions.push(`強烈建議啟用**安全邊際**並將**固定保證金 (Margin)** 提高到至少 ${fmt(margin * 1.5, 0)} USD。`);
-    } 
-    // 條件 2: 表現優異 (Calmar Ratio > 1.5 且 ROI > 15%)
-    else if (calmarRatio > 1.5 && roiPct > 15) {
+    } else if (calmarRatio > 1.5 && roiPct > 15) {
         adviceType = '🌟 績效強勁 / 高效能';
         adviceClass = 'ok';
-        summary = `策略表現強勁且風險調整後報酬（**Calmar Ratio ${calmarRatio.toFixed(2)}**）優異，顯示策略在創造報酬的同時，能有效控制最大回撤。`;
+        summary = `策略表現強勁且**風險調整後報酬**（Calmar Ratio ${calmarRatio.toFixed(2)}）優異，顯示策略在創造報酬的同時，能有效控制**最大回撤**（MDD）。`;
         suggestions.push(`可嘗試在當前槓桿下，**提高單次進場名目 (LOT)** 約 10-20% (例如 ${fmt(lot * 1.15, 0)} USD) 進行再次回測。`);
         suggestions.push('建議保留**出場價低於倉位均價不出場**的限制，以維持低回撤優勢。');
-    } 
-    // 條件 3: 高風險低報酬 (MDD > 30% 且 Calmar Ratio < 0.5)
-    else if (mddPct > 30 && calmarRatio < 0.5) {
+    } else if (mddPct > 30 && calmarRatio < 0.5) {
         adviceType = '⚠️ 高回撤 / 低效能';
         adviceClass = 'bad';
-        summary = `最大回撤高達 **${mddPct.toFixed(2)}%** 且風險調整後報酬（Calmar Ratio）低於 0.5，策略風險過高。`;
+        summary = `**最大回撤**高達 **${mddPct.toFixed(2)}%** 且**風險調整後報酬**（Calmar Ratio）低於 0.5，策略風險過高。`;
         suggestions.push(`建議**提高入場回檔觸發 (%)** (例如 ${Math.min(30, entryPullback + 5)}%) 以確保買在深跌。`);
         suggestions.push('應檢查出場條件，可能需要**降低出場回落觸發 (%)** 來更早地止損或鎖利。');
         suggestions.push('考慮**降低單次進場名目 (LOT)**，降低單次虧損的影響。');
-    }
-    // 條件 4: 潛在漏接機會 (進場次數過少)
-    else if (nEntry < Math.max(5, dataLength / 180)) { // 每半年不到 2 次，視為過少
+    } else if (nEntry < Math.max(5, dataLength / 180)) {
         adviceType = '🟡 交易頻率低';
         adviceClass = 'warn';
         summary = '策略可能過於保守，進場次數過少，錯失了潛在的交易機會。';
         suggestions.push(`嘗試**縮短滾動高點視窗（進場）** (例如 ${Math.max(30, entryLookback - 30)} 天) 來放寬入場限制。`);
         suggestions.push(`或**降低回檔觸發 (%)** (例如 ${Math.max(5, entryPullback - 5)}%) 來提高進場次數。`);
-    }
-    // 條件 5: 中等表現/需要微調 (適用於您提供的範例結果)
-    else {
-        // 適用於 ROI 599.72%, Calmar Ratio 1.45 (中等偏上)
+    } else {
         adviceType = '💡 中等穩健 / 優化空間';
         adviceClass = 'warn';
-        summary = `目前總報酬 **${roiPct.toFixed(2)}%** 表現良好，但風險調整後報酬（Calmar Ratio ${calmarRatio.toFixed(2)}）在 1.5 附近，仍有提升空間。`;
-        
-        // 核心建議排版
-        suggestions.push(`**【策略平衡】**建議確保 **入場回檔 (${entryPullback}%) 大於等於 (>=) 出場回落 (${exitDrawdown}%)**，以確保有足夠的浮盈空間來應對回落觸發，減少假訊號。`);
-        suggestions.push(`**【降低波動】**若希望降低波動，請檢查 **「出場價低於倉位均價不出場」** 是否啟用。此限制有助於**控制最大回撤 (MDD)**。`);
-        suggestions.push(`**【持續測試】**建議專注於單一參數的微調（例如調整入場回檔 **+/- 5%**），觀察 Calmar Ratio 的變化。`);
+        summary = `目前總報酬 **${roiPct.toFixed(2)}%** 表現良好，但**風險調整後報酬**（Calmar Ratio ${calmarRatio.toFixed(2)}）在 1.5 附近，仍有提升空間。`;
+        suggestions.push(`**【策略平衡】**建議確保 **入場回檔 (${entryPullback}%) ≥ 出場回落 (${exitDrawdown}%)**，以保留足夠的浮盈來應對回落觸發。`);
+        suggestions.push(`**【降低波動】**建議保留 **「出場價低於倉位均價不出場」** 限制，有助於降低 MDD。`);
+        suggestions.push(`**【持續測試】**建議一次只調一個參數（例如入場回檔 **±5%**），觀察 Calmar Ratio 的反應。`);
     }
 
-    // 渲染結果
     let html = `
         <div class="advice-type ${adviceClass}">【${adviceType}】</div>
         <p style="margin-top: 5px; margin-bottom: 5px; font-size: 13px; color: var(--text);">${summary}</p>
@@ -941,52 +868,83 @@
     container.innerHTML = html;
   }
 
-
   function renderEntriesTable(list){
     const head=$('#entriesTable thead tr'), body=$('#entriesTable tbody'); head.innerHTML=''; body.innerHTML='';
-    const cols=['類型','日期','價格','參考高點','參考高點日期','觸發價','名目部位USD','倉位均價','持倉價值USD','出場比例%','ROI(USDT)','ROI(%)','倉位槓桿倍數×'];
+    const cols=['類型','日期','價格','參考高點','參考高點日期','觸發價','名目部位USD','倉位均價','持倉價值USD','出場比例%','ROI(USDT)','ROI(%)','獲利了結USD','累積獲利USD']; 
     cols.forEach(c=>{ const th=document.createElement('th'); th.textContent=c; head.appendChild(th); });
     list.forEach(r=>{
       const tr=document.createElement('tr');
-      const levx = (r.倉位槓桿倍數!=null && isFinite(r.倉位槓桿倍數))? r.倉位槓桿倍數: null;
-      [ r.類型, iso(r.日期), fmt(r.價格,2), fmt(r.參考高點,2), (r.參考高點日期? iso(r.參考高點日期): '—'), fmt(r.觸發價,2), fmt(r.名目部位USD,0), fmt(r.倉位均價,2), fmt(r.持倉價值USD,0), (r.出場比例!=null? r.出場比例+'%':'—'), fmt(r.ROI_USDT,2), (r.ROI_PCT!=null? r.ROI_PCT.toFixed(2)+'%':'—'), (levx==null?'—':fmt(levx,2)) ]
-        .forEach(v=>{ const td=document.createElement('td'); td.textContent=v; tr.appendChild(td); });
+      const realizedDisplay = (r.類型.startsWith('進場') || r.類型.startsWith('爆倉')) ? '—' : fmt(r.Realized_Gain, 2);
+      [ 
+        r.類型, 
+        iso(r.日期), 
+        fmt(r.價格,2), 
+        fmt(r.參考高點,2), 
+        (r.參考高點日期? iso(r.參考高點日期): '—'), 
+        fmt(r.觸發價,2), 
+        fmt(r.名目部位USD,0), 
+        fmt(r.倉位均價,2), 
+        fmt(r.持倉價值USD,0), 
+        (r.出場比例!=null? r.出場比例+'%':'—'), 
+        fmt(r.ROI_USDT,2), 
+        (r.ROI_PCT!=null? r.ROI_PCT.toFixed(2)+'%':'—'),
+        realizedDisplay, 
+        fmt(r.Cumulative_Profit, 2)
+      ].forEach(v=>{ const td=document.createElement('td'); td.textContent=v; tr.appendChild(td); });
       body.appendChild(tr);
     });
   }
-  
-  // 處理後路徑表格已被移除
-  // function renderPathTable(path){ ... }
 
+  /* ---- 回測結果圖（加入 resize 守門 + RAF） ---- */
   function renderChart(data, entries, path){
-    if(typeof Chart==='undefined') return; const ctx=$('#chart').getContext('2d');
-    const labels=data.map(x=> iso(x.date)); const price=data.map(x=> x.close);
+    if(typeof Chart==='undefined') return;
+    const ctx=$('#chart').getContext('2d');
+    const labels=data.map(x=> iso(x.date)); 
+    const price=data.map(x=> x.close);
     const avgLine=path.map(x=> isNaN(x.avg_price)? null: x.avg_price);
     const liqLine=path.map(x=> (x&&x.liq_price!=null)? x.liq_price: null);
+    
     const labelsEntries = entries.map(e=> iso(e.日期));
-    const entryY   = entries.map(e=> e.價格);
     const entryFlags = entries.map(e=> e.類型.startsWith('進場'));
     const exitFlags  = entries.map(e=> e.類型.startsWith('回落觸發') || e.類型.startsWith('跌破前高') || e.類型.startsWith('強制全出'));
 
-    const idxEntry = labelsEntries.map(t=> labels.indexOf(t));
-    const scatterEntry = labels.map((_,i)=>{ const j=idxEntry.indexOf(i); return (j>=0 && entryFlags[j])? entryY[j]: null; });
-    const scatterExit  = labels.map((_,i)=>{ const j=idxEntry.indexOf(i); return (j>=0 && exitFlags[j])? entryY[j]: null; });
+    const scatterEntry = labels.map((_,i)=>{ 
+        const j=labelsEntries.indexOf(labels[i]); 
+        return (j>=0 && entryFlags[j]) ? price[i] : null; 
+    });
+    const scatterExit  = labels.map((_,i)=>{ 
+        const j=labelsEntries.indexOf(labels[i]); 
+        return (j>=0 && exitFlags[j]) ? price[i] : null; 
+    });
 
     if(chart) chart.destroy();
-    chart = new Chart(ctx,{
-      type:'line', data:{ labels,
-        datasets:[
-          { label:'收市', data:price, pointRadius:0, borderColor:cPrice },
-          { label:'加權平均價', data:avgLine, borderDash:[6,4], pointRadius:0, borderColor:cAvg },
-          { label:'爆倉線（動態）', data:liqLine, borderDash:[2,2], pointRadius:0, borderColor:cLiq },
-          { label:'進場點', type:'scatter', data:scatterEntry, showLine:false, pointRadius:4, borderColor:cEntry, backgroundColor:cEntry },
-          { label:'出場點', type:'scatter', data:scatterExit,  showLine:false, pointRadius:4, borderColor:cExit,  backgroundColor:cExit }
-        ] },
-      options:{ responsive:true, resizeDelay:200, animation:false,
-        interaction:{mode:'index',intersect:false},
-        plugins:{ legend:{position:'top', labels:{color:'#EDEFF5'}}, tooltip:{callbacks:{label:(c)=> c.dataset.label+': '+fmt(c.parsed.y,2)}} },
-        scales:{ x:{ticks:{color:'#C9D3EA',maxRotation:0,autoSkip:true,maxTicksLimit:12}, grid:{color:'rgba(233,209,138,.12)'}}, y:{beginAtZero:false, ticks:{color:'#C9D3EA'}, grid:{color:'rgba(233,209,138,.12)'}} }
-      }
+    if (_resizeHold) { requestAnimationFrame(() => renderChart(data, entries, path)); return; }
+
+    requestAnimationFrame(() => {
+      chart = new Chart(ctx,{
+        type:'line',
+        data:{ labels,
+          datasets:[
+            { label:'收市', data:price, pointRadius:0, borderColor:cPrice },
+            { label:'加權平均價', data:avgLine, borderDash:[6,4], pointRadius:0, borderColor:cAvg },
+            { label:'爆倉線（動態）', data:liqLine, borderDash:[2,2], pointRadius:0, borderColor:cLiq },
+            { label:'進場點', type:'scatter', data:scatterEntry, showLine:false, pointRadius:4, borderColor:cEntry, backgroundColor:cEntry, pointStyle:'circle' },
+            { label:'出場點', type:'scatter', data:scatterExit,  showLine:false, pointRadius:4, borderColor:cExit,  backgroundColor:cExit,  pointStyle:'rectRot' }
+          ]
+        },
+        options:{ 
+          responsive:true, resizeDelay:200, animation:false, maintainAspectRatio:false,
+          interaction:{mode:'index',intersect:false},
+          plugins:{ 
+            legend:{position:'top', labels:{color:'#EDEFF5'}}, 
+            tooltip:{callbacks:{label:(c)=> c.dataset.label+': '+fmt(c.parsed.y,2)}}
+          },
+          scales:{ 
+            x:{ticks:{color:'#C9D3EA',maxRotation:0,autoSkip:true,maxTicksLimit:12}, grid:{color:'rgba(233,209,138,.12)'}}, 
+            y:{beginAtZero:false, ticks:{color:'#C9D3EA'}, grid:{color:'rgba(233,209,138,.12)'}} 
+          }
+        }
+      });
     });
   }
 
@@ -1008,7 +966,6 @@
     const safetyOn = $('#safetyMode').value==='on';
     const safetyFloor = Number($('#safetyFloor').value);
 
-    // 自動更新滿倉上限顯示
     $('#maxNotional').value = (lev*margin).toFixed(0);
 
     const cut = filterYears(df, years); if(!cut.length){ uiLog('期間內沒有資料'); return; }
@@ -1030,47 +987,32 @@
     });
 
     lastRes=res; lastData=cut; lastYears=years;
-    // 渲染 Summary Table (新) 和 Entries Table (舊)
     renderSummary(cut,res,years); 
     renderEntriesTable(res.entries); 
     renderChart(cut,res.entries,res.path);
     
     uiLog(`完成：進場 ${res.nEntry} 次、出場 ${res.nExit} 次${res.liquidated?'（已爆倉）':''}；樣本 ${cut.length} 筆`);
     $('#exportEntries').disabled = res.entries.length===0; $('#exportSummary').disabled = false;
-    // 回測完成後啟用下載 PNG 按鈕
     $('#exportChartPng').disabled = false;
   }
 
   // 匯出
   function exportEntriesCSV(){ if(!lastRes) return; const rows=lastRes.entries; const csv=toCSV(rows,
-      ['類型','日期','價格','參考高點','參考高點日期','觸發價','名目部位USD','倉位均價','持倉價值USD','出場比例','ROI_USDT','ROI_PCT','倉位槓桿倍數'],
-      ['type','date','price','ref_high','ref_high_date','trigger_price','notional_usd','avg_price','position_value_usd','exit_ratio_pct','roi_usdt','roi_pct','lev']
+      ['類型','日期','價格','參考高點','參考高點日期','觸發價','名目部位USD','倉位均價','持倉價值USD','出場比例','ROI_USDT','ROI_PCT','Realized_Gain','Cumulative_Profit'],
+      ['type','date','price','ref_high','ref_high_date','trigger_price','notional_usd','avg_price','position_value_usd','exit_ratio_pct','roi_total_usdt','roi_total_pct','realized_gain_usd','cumulative_realized_usd']
     ); downloadCSV('entries.csv', csv); }
   function exportSummaryCSV(){ if(!lastRes) return; const r=lastRes; const csv=toCSV([{ samples:lastData?.length||0, range:(lastData?.length? iso(lastData[0].date)+' → '+iso(lastData[lastData.length-1].date):''), entries:r.nEntry, exits:r.nExit, liquidated:r.liquidated?'Y':'N', equity_end:r.equityEnd, roi_pct:r.roi*100, mdd_pct:r.mddPct, safety_end_pct:r.safetyEnd }], ['samples','range','entries','exits','liquidated','equity_end','roi_pct','mdd_pct','safety_end_pct'], ['samples','range','entries','exits','liquidated','equity_end','roi(%)','mdd(%)','safety_end(%)']); downloadCSV('summary.csv', csv); }
 
-  // === 摺疊面板邏輯 ===
+  // 摺疊面板
   function setupCollapsible(id) {
     const header = document.querySelector(`.collapsible-header[data-target="${id}"]`);
     const content = document.getElementById(id);
-
     if (!header || !content) return;
-
-    // 初始狀態：展開
-    // 延遲設定 max-height 才能讓 transition work，否則會在載入時瞬間展開
-    setTimeout(() => {
-        content.style.maxHeight = content.scrollHeight + 'px';
-    }, 50); 
-    
+    setTimeout(() => { content.style.maxHeight = content.scrollHeight + 'px'; }, 50); 
     header.addEventListener('click', () => {
         const isCollapsed = header.classList.contains('collapsed');
         header.classList.toggle('collapsed');
-        if (isCollapsed) {
-            // 展開
-            content.style.maxHeight = content.scrollHeight + 'px';
-        } else {
-            // 摺疊
-            content.style.maxHeight = '0';
-        }
+        content.style.maxHeight = isCollapsed ? content.scrollHeight + 'px' : '0';
     });
   }
 
@@ -1084,16 +1026,11 @@
 
   // 即時圖：初始與控制綁定
   async function initLive(){ await refreshLiveDaily(); startBinanceWS(); bindLiveAutoRefresh(); }
-  
   document.addEventListener('DOMContentLoaded', () => {
-    // 預設展開風控和資金參數
     setupCollapsible('controlRisk');
     setupCollapsible('controlFund'); 
     initLive();
   });
-  
-
-  // 右上即時圖與左側進/出場設定同步
   $('#entryLookback').addEventListener('change', refreshLiveDaily);
   $('#entryPullback').addEventListener('input', refreshLiveDaily);
   $('#exitLookback').addEventListener('change', refreshLiveDaily);
